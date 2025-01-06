@@ -148,3 +148,20 @@
   column-gap: 6px;
   padding-left: 16px;
 }
+.todoTask {
+  width: 345px;
+  height: 62px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.deleteButton {
+  border: none;
+  height: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #ef4444;
+  border-radius: 6px;
+  padding-inline: 12px;
+  background-color: #fef2f2;
+}
