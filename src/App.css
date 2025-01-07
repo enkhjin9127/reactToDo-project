@@ -1,14 +1,22 @@
 .App {
-  height: 100vh;
-  background-color: #f3f5f7;
-  display: flex;
-  justify-content: center;
-  padding-top: 60px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 .App-container {
-  width: 377px;
-  height: 290px;
+  min-height: 100vh;
+  padding-top: 60px;
   background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.16);
+}
+.App-inner-container {
+  width: 377px;
+  padding: 24px 16px;
+  border-radius: 8px;
+  margin-inline: auto;
+  background-color: #fff;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.16);
 }
 .center {
   display: flex;
@@ -164,4 +172,26 @@
   border-radius: 6px;
   padding-inline: 12px;
   background-color: #fef2f2;
+}
+.Notask {
+  padding-top: 12px;
+  padding-bottom: 40px;
+}
+.pinecone {
+  color: #3b73ed;
+}
+.taskCompleted {
+  border-top: 1px solid #e4e4e7;
+  justify-content: space-between;
+}
+.clearButton {
+  border: none;
+  height: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #ef4444;
+  background-color: transparent;
+}
+.footer {
+  padding-top: 40px;
 }
