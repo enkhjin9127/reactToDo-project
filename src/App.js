@@ -21,7 +21,7 @@ function App() {
 
   const handleAddButton = () => {
     if (inputValue.length === 0) {
-      setError("Please enter a task");
+      alert("Please enter a task");
       logActivity("Error: Please enter a task");
       return;
     } else {
@@ -57,7 +57,6 @@ function App() {
 
   const handleFilterState = (state) => {
     setFilterState(state);
-    logActivity(`Set filter state to ${state}`);
   };
 
   const clearCompleted = () => {
@@ -106,40 +105,58 @@ function App() {
             >
               Completed
             </button>
+            <button
+              onClick={() => handleFilterState("LOG")}
+              className="activityLogButton"
+            >
+              Activity Log
+            </button>
           </div>
           <div className="Notask center column">
-            {todo.length === 0 ? "No tasks yet. Add one above!" : null}
-            {todo
-              .filter((todo) => {
-                if (filterState === "ALL") {
-                  return true;
-                } else if (filterState === "ACTIVE") {
-                  return todo.status === "ACTIVE";
-                } else if (filterState === "DONE") {
-                  return todo.status === "DONE";
-                }
-                return false;
-              })
-              .map((todo) => {
-                return (
-                  <div className="todoTask" key={todo.id}>
-                    <div style={{ display: "flex" }}>
-                      <input
-                        type="checkbox"
-                        checked={todo.status === "DONE"}
-                        onChange={() => handleBox(todo.id)}
-                      />
-                      <p>{todo.text}</p>
+            {filterState === "LOG" ? (
+              <div className="activity-log">
+                <h2>Activity Log</h2>
+                <ul>
+                  {activityLog.map((log, index) => (
+                    <li key={index}>
+                      {log.message} - {moment(log.timestamp).fromNow()}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              todo
+                .filter((todo) => {
+                  if (filterState === "ALL") {
+                    return true;
+                  } else if (filterState === "ACTIVE") {
+                    return todo.status === "ACTIVE";
+                  } else if (filterState === "DONE") {
+                    return todo.status === "DONE";
+                  }
+                  return false;
+                })
+                .map((todo) => {
+                  return (
+                    <div className="todoTask" key={todo.id}>
+                      <div style={{ display: "flex" }}>
+                        <input
+                          type="checkbox"
+                          checked={todo.status === "DONE"}
+                          onChange={() => handleBox(todo.id)}
+                        />
+                        <p>{todo.text}</p>
+                      </div>
+                      <button
+                        className="deleteButton"
+                        onClick={() => handleDelete(todo.id)}
+                      >
+                        Delete
+                      </button>
                     </div>
-                    <button
-                      className="deleteButton"
-                      onClick={() => handleDelete(todo.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })
+            )}
           </div>
           <div className="taskCompleted center">
             <p>
@@ -152,16 +169,6 @@ function App() {
           <div className="footer center">
             <span>Powered by &nbsp;</span>
             <span className="pinecone"> Pinecone academy</span>
-          </div>
-          <div className="activity-log">
-            <h2>Activity Log</h2>
-            <ul>
-              {activityLog.map((log, index) => (
-                <li key={index}>
-                  {log.message} - {moment(log.timestamp).fromNow()}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>
