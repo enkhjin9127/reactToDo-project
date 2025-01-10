@@ -1,14 +1,18 @@
 import "./App.css";
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+import { v4 as uuid } from "uuid";
+import React, { useState } from "react";
+import FilterButtons from "./components/FilterButton";
+import AddTask from "./components/AddTask";
+import TaskList from "./components/TaskList";
+import Footer from "./components/Footer";
 
-function App() {
+const App = () => {
   const [todo, setTodo] = useState([]);
   const [error, setError] = useState("");
-  const [filterState, setFilterState] = useState("ALL");
   const [inputValue, setInputValue] = useState("");
   const [activityLog, setActivityLog] = useState([]);
+  const [filterState, setFilterState] = useState("ALL");
 
   const logActivity = (message) => {
     const timestamp = moment();
@@ -26,7 +30,7 @@ function App() {
       return;
     } else {
       setError("");
-      const newTodo = { text: inputValue, id: uuidv4(), status: "ACTIVE" };
+      const newTodo = { text: inputValue, id: uuid(), status: "ACTIVE" };
       setTodo([...todo, newTodo]);
       logActivity(`Added todo: ${inputValue} (ID: ${newTodo.id})`);
       setInputValue("");
@@ -55,10 +59,6 @@ function App() {
     logActivity(`Deleted todo: ${todoToDelete.text} (ID: ${id})`);
   };
 
-  const handleFilterState = (state) => {
-    setFilterState(state);
-  };
-
   const clearCompleted = () => {
     const newTodos = todo.filter((todo) => todo.status !== "DONE");
     setTodo(newTodos);
@@ -73,99 +73,26 @@ function App() {
         <div className="App-inner-container">
           <div className="center column">
             <h2>To-Do list</h2>
-            <div className="addTaskContainer">
-              <input
-                placeholder="Add a new task..."
-                value={inputValue}
-                onChange={handleInputChange}
-                className="inputBox"
-              />
-              {error.length > 1 && <div>{error}</div>}
-              <button onClick={handleAddButton} className="addButton">
-                Add
-              </button>
-            </div>
+            <AddTask
+              inputValue={inputValue}
+              handleInputChange={handleInputChange}
+              handleAddButton={handleAddButton}
+              error={error}
+            />
           </div>
-          <div className="filterButtons">
-            <button
-              onClick={() => handleFilterState("ALL")}
-              className="allTaskButton"
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleFilterState("ACTIVE")}
-              className="activeTaskButton"
-            >
-              Active
-            </button>
-            <button
-              onClick={() => handleFilterState("DONE")}
-              className="completedTaskButton"
-            >
-              Completed
-            </button>
-            <button
-              onClick={() => handleFilterState("LOG")}
-              className="activityLogButton"
-            >
-              Activity Log
-            </button>
-          </div>
-          <div className="Notask center column">
-            {filterState === "LOG" ? (
-              <div className="activity-log">
-                <h2>Activity Log</h2>
-                <ul>
-                  {activityLog.map((log, index) => (
-                    <li key={index}>
-                      {log.message} - {moment(log.timestamp).fromNow()}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              todo
-                .filter((todo) => {
-                  if (filterState === "ALL") {
-                    return true;
-                  } else if (filterState === "ACTIVE") {
-                    return todo.status === "ACTIVE";
-                  } else if (filterState === "DONE") {
-                    return todo.status === "DONE";
-                  }
-                  return false;
-                })
-                .map((todo) => {
-                  return (
-                    <div className="todoTask" key={todo.id}>
-                      <div style={{ display: "flex" }}>
-                        <input
-                          type="checkbox"
-                          checked={todo.status === "DONE"}
-                          onChange={() => handleBox(todo.id)}
-                        />
-                        <p>{todo.text}</p>
-                      </div>
-                      <button
-                        className="deleteButton"
-                        onClick={() => handleDelete(todo.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  );
-                })
-            )}
-          </div>
-          <div className="taskCompleted center">
-            <p>
-              {completedCount} of {todo.length} tasks completed
-            </p>
-            <button onClick={clearCompleted} className="clearButton">
-              Clear completed
-            </button>
-          </div>
+          <FilterButtons setFilterState={setFilterState} />
+          <TaskList
+            todo={todo}
+            filterState={filterState}
+            handleBox={handleBox}
+            handleDelete={handleDelete}
+            activityLog={activityLog}
+          />
+          <Footer
+            completedCount={completedCount}
+            totalTasks={todo.length}
+            clearCompleted={clearCompleted}
+          />
           <div className="footer center">
             <span>Powered by &nbsp;</span>
             <span className="pinecone"> Pinecone academy</span>
@@ -174,6 +101,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
